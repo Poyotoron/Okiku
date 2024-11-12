@@ -1,10 +1,66 @@
+"use client";
+
 import Image from "next/image";
-import { Rock_Salt } from "next/font/google"
+import { Rock_Salt } from "next/font/google";
+import { useState } from "react";
+
+import { countChar } from "./counter";
 
 const rock_salt = Rock_Salt({
   weight: '400',
   subsets: ['latin'],
 })
+
+type CharFormData = {
+  text: string;
+  includeSpace: boolean;
+};
+
+function CharForm() {
+  const [formData, setFormData] = useState<CharFormData>({
+    text: "",
+    includeSpace: true,
+  });
+  const [numChar, setNumChar] = useState(0);
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    const checked = type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
+
+    const newFormData = {
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    }
+    setFormData(newFormData);
+    setNumChar(await countChar(newFormData));
+  };
+
+  return (
+    <div className="text-center">
+      <form>
+        <label className="items-center space-x-2">
+          <input
+            type="checkbox"
+            name="includeSpace"
+            checked={formData.includeSpace}
+            onChange={handleChange}
+          />
+          <span>空白文字 (スペース、改行等) を1文字とカウントする</span>
+        </label>
+        <div className="mt-4">
+          <textarea
+            name="text"
+            value={formData.text}
+            onChange={handleChange}
+            style={{ borderColor: 'black', borderWidth: '1px', width: '60%', height: '200px' }}
+          />
+        </div>
+      </form>
+
+      <p> 文字数: {numChar} </p>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
@@ -26,7 +82,10 @@ export default function Home() {
           <div className="text-center">
             <h2>文字数カウント</h2>
           </div>
-          工事中……
+          
+          <div>
+            <CharForm />
+          </div>
         </div>
 
         <hr className="my-8 border-t-2 border-gray-300" />

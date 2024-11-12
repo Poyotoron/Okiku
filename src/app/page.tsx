@@ -16,7 +16,7 @@ type CharFormData = {
   includeSpace: boolean;
 };
 
-export function CharForm() {
+function CharForm() {
   const [formData, setFormData] = useState<CharFormData>({
     text: "",
     includeSpace: true,
@@ -83,7 +83,7 @@ export default function Home() {
             <h2>文字数カウント</h2>
           </div>
           
-          <div className="text-center">
+          <div>
             <CharForm />
           </div>
         </div>

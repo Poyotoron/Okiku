@@ -11,22 +11,28 @@ const rock_salt = Rock_Salt({
   subsets: ['latin'],
 })
 
+type CharFormData = {
+  text: string;
+  includeSpace: boolean;
+};
+
 export function CharForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CharFormData>({
     text: "",
-    includeSpace: false,
+    includeSpace: true,
   });
   const [numChar, setNumChar] = useState(0);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     const checked = type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
 
-    setNumChar(await countChar(formData));
+    const newFormData = {
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    }
+    setFormData(newFormData);
+    setNumChar(await countChar(newFormData));
   };
 
   return (
